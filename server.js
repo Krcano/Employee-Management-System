@@ -21,29 +21,91 @@ function questionPrompts() {
       name: "usersChoice",
       message: "What would you like to do first?",
       choices: [
-        "view all departments",
-        "view all roles",
-        "view all employees",
-        "add a department",
-        "add a role",
-        "add an employee",
-        "update an employee",
+        "View all departments",
+        "View all roles",
+        "View all employees",
+        "Add a department",
+        "Add a role",
+        "Add an employee",
+        "Update an employee",
+        "Exit Program",
       ],
     })
     .then((data) => {
-      if (data.usersChoice === "view all departments") {
-        db.query("SELECT * FROM departments", function (err, results) {
+      if (data.usersChoice === "View all departments") {
+        db.query("SELECT * FROM department", function (err, results) {
           console.log(results);
+          questionPrompts();
         });
-      } else if (data.usersChoice === "view all roles") {
-        db.query("SELECT * FROM roles", function (err, results) {
+      } else if (data.usersChoice === "View all roles") {
+        db.query("SELECT * FROM role", function (err, results) {
           console.log(results);
+          questionPrompts();
         });
-      } else if (data.usersChoice === "view all employees") {
-        db.query("SELECT * FROM employees", function (err, results) {
+      } else if (data.usersChoice === "View all employees") {
+        db.query("SELECT * FROM employee", function (err, results) {
           console.log(results);
+          questionPrompts();
         });
+      } else if (data.usersChoice === "Exit Program") {
+        console.log("See ya later");
+        process.exit();
+      } else if (data.usersChoice === "Add a department") {
+        addDepartment();
+      } else if (data.usersChoice === "Add a role") {
+        addRole();
+      } else if (data.usersChoice === "Add an employee") {
+        addEmployee();
+      } else if (data.usersChoice === "Update an employee") {
+        updateEmployee();
       }
+      
     });
+    
 }
 
+function addEmployee() {
+  // const managers =[];
+  // db.query(SELECT * )
+  // select all employees innerjoin role id onto roles table
+  // WHERE role.title = managers
+  // add managers, ids, and department name from the role table into the managers array
+  // use managers array as the choices for the inquirer prompt question
+  db.query(
+    "SELECT role.title, role.id, department.name AS Department_name FROM role INNER JOIN department ON role.department_id = department.id",
+    function (err, results) {
+      const titles = results.map((element) => {
+        return {
+          name: `${element.title} from department: ${element.Department_name}`,
+          value: element.id,
+        };
+      });
+      inquirer
+        .prompt([
+          {
+            type: "list",
+            name: "role",
+            message: "What role do they have?",
+            choices: titles,
+          },
+          {
+            type: "input",
+            name: "firstName",
+            message: "Whatis their first name?",
+          },
+          {
+            type: "input",
+            name: "lastName",
+            message: "What is their last name?",
+          },
+        ])
+        .then((data) => {
+          console.log(data);
+          questionPrompts()
+        });
+    }
+  );
+  
+}
+
+questionPrompts();
