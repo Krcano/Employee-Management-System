@@ -47,25 +47,28 @@ function questionPrompts() {
         });
       }
       // Needs to show additional info like title dept salary and manager name
-     // Needs to show additional info like title dept salary and manager name
-     else if (data.usersChoice === "View all employees") {
-      db.query("SELECT * FROM employee", function (err, results) {
-        console.table(results);
-        questionPrompts();
-      });
-    } else if (data.usersChoice === "Exit Program") {
-      console.log("See ya later");
-      process.exit();
-    } else if (data.usersChoice === "Add a department") {
-      addDepartment();
-    } else if (data.usersChoice === "Add a role") {
-      addRole();
-    } else if (data.usersChoice === "Add an employee") {
-      addEmployee();
-    } else if (data.usersChoice === "Update an employee") {
-      updateEmployee();
-    }
-  });
+      // Needs to show additional info like title dept salary and manager name
+      else if (data.usersChoice === "View all employees") {
+        db.query(
+          "SELECT employee.*, role.title, role.salary FROM employee ",
+          function (err, results) {
+            console.table(results);
+            questionPrompts();
+          }
+        );
+      } else if (data.usersChoice === "Exit Program") {
+        console.log("See ya later");
+        process.exit();
+      } else if (data.usersChoice === "Add a department") {
+        addDepartment();
+      } else if (data.usersChoice === "Add a role") {
+        addRole();
+      } else if (data.usersChoice === "Add an employee") {
+        addEmployee();
+      } else if (data.usersChoice === "Update an employee") {
+        updateEmployee();
+      }
+    });
 }
 
 // ADD AN EMPLOYEE FUNCTION
@@ -135,10 +138,10 @@ function addDepartment() {
 function addRole() {
   db.query("SELECT name, id FROM department", function (err, results) {
     const departmentNames = results.map((dept) => {
-      return{
+      return {
         name: dept.name,
         value: dept.id,
-      }
+      };
     });
     // console.log(departmentNames)
     inquirer
@@ -164,12 +167,11 @@ function addRole() {
         db.query(
           `INSERT INTO role (title, salary, department_id) VALUES ("${data.title}", "${data.salary}", ${data.department})  `,
           function (err, results) {
-            console.log(departmentNames)
-            // console.log(`\n You just added ${data.title} with a salary of ${data.salary} as a new role`);
-            // console.log(results)
-            console.log(err)
-            return results
-            // console.log(departmentNames);
+            console.log(departmentNames);
+            console.log(
+              `\n You just added ${data.title} with a salary of ${data.salary} as a new role`
+            );
+            return results;
           }
         );
         questionPrompts();
