@@ -110,7 +110,7 @@ function addEmployee() {
           
           // needs to be able to add the employee to employee table when a new employee is created!!
           db.query(
-            `INSERT INTO employee (first_name, lastname, role_id) VALUES (${data.firstName}, ${data.lastName}, ${data.id}) JOIN role on employee.role_id = role_id )`,
+            `INSERT INTO employee (first_name, last_name, role_id) VALUES (${data.firstName}, ${data.lastName}, ${data.role})`,
             function (err, results) {
               if(err){
                 console.log(err)
