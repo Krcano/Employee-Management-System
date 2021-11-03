@@ -1,6 +1,6 @@
 USE business_db;
 -- Insert multiple biographies --
-INSERT INTO department ( name)
+INSERT INTO department (name)
 VALUES
     ("Accounting" ),
     ("Sales" ),
@@ -8,7 +8,7 @@ VALUES
     ("Human Resources" ),
     ("Customer Service" );
 
-INSERT INTO role ( title, salary, department_id )
+INSERT INTO role (title, salary, department_id )
 VALUES
     ("Engineer", 80000, 3 ),
     ("HR Rep", 85000, 4),
@@ -17,7 +17,7 @@ VALUES
     ("Sales Rep", 65000, 2);
 
 -- HOW DO I GET VALUES INTO THE TABLE?
-INSERT INTO employee ( first_name, last_name, role_id, manager_id )
+INSERT INTO employee (first_name, last_name, role_id, manager_id )
 VALUES
     ("Angela","Martin", 3, NULL),
     ("Jim","Halpert", 5, NULL),
