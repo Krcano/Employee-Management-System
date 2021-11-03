@@ -59,11 +59,10 @@ function questionPrompts() {
       } else if (data.usersChoice === "Update an employee") {
         updateEmployee();
       }
-      
     });
-    
 }
 
+// ADD AN EMPLOYEE FUNCTION
 function addEmployee() {
   // const managers =[];
   // db.query(SELECT * )
@@ -76,7 +75,7 @@ function addEmployee() {
     function (err, results) {
       const titles = results.map((element) => {
         return {
-          name: `${element.title} from department: ${element.Department_name}`,
+          name: `${element.title} from ${element.Department_name}`,
           value: element.id,
         };
       });
@@ -101,11 +100,66 @@ function addEmployee() {
         ])
         .then((data) => {
           console.log(data);
-          questionPrompts()
+          questionPrompts();
         });
     }
   );
-  
+}
+
+// ADDs A DEPARTMENT FUNCTION
+function addDepartment() {
+  inquirer
+    .prompt({
+      type: "input",
+      name: "department",
+      message: "What is the new department name?",
+    })
+    .then((data) => {
+      db.query(
+        `INSERT INTO department(id, name) VALUES (id, "${data.department}")`,
+        function (err, results) {
+          console.log(`\n You just added the ${data.department} department.`);
+        });
+      questionPrompts();
+    });
+}
+
+// ADD A ROLE FUNCTION
+function addRole() {
+  db.query(
+    "SELECT role.title, role.id, department.name AS Department_name FROM role INNER JOIN department ON role.department_id = department.id",
+    function (err, results) {
+      const titles = results.map((element) => {
+        return {
+          name: `${element.title} from ${element.Department_name}`,
+          value: element.id,
+        };
+      });
+      inquirer
+        .prompt([
+          {
+            type: "list",
+            name: "role",
+            message: "What role do they have?",
+            choices: titles,
+          },
+          {
+            type: "input",
+            name: "firstName",
+            message: "Whatis their first name?",
+          },
+          {
+            type: "input",
+            name: "lastName",
+            message: "What is their last name?",
+          },
+        ])
+        .then((data) => {
+          console.log(data);
+          questionPrompts();
+        });
+    }
+  );
 }
 
 questionPrompts();
