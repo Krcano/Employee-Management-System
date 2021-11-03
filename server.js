@@ -46,11 +46,10 @@ function questionPrompts() {
           questionPrompts();
         });
       }
-      // Needs to show additional info like title dept salary and manager name
-      // Needs to show additional info like title dept salary and manager name
+      // NEEDS TO SHOW MANAGERS and dept names instead of the numbers
       else if (data.usersChoice === "View all employees") {
         db.query(
-          "SELECT employee.*, role.title, role.salary FROM employee ",
+          "SELECT employee.id, employee.first_name, employee.last_name, role.title, role.salary,role.department_id FROM employee JOIN role ON employee.role_id = role.id",
           function (err, results) {
             console.table(results);
             questionPrompts();
@@ -108,7 +107,16 @@ function addEmployee() {
           },
         ])
         .then((data) => {
-          console.log(data);
+          
+          // needs to be able to add the employee to employee table when a new employee is created!!
+          db.query(
+            `INSERT INTO employee (id, first_name, lastname, role_id) VALUES (id, ${data.firstName}, ${data.lastName}, role_id ) JOIN role on employee.role_id = role_id )`,
+            function (err, results) {
+              // console.log(`\n You just added a new employee`);
+              
+            }
+          );
+          // console.log(data);
           questionPrompts();
         });
     }
