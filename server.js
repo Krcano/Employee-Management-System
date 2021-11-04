@@ -1,6 +1,6 @@
 const mysql = require("mysql2");
 const inquirer = require("inquirer");
-const Table = require("console.table");
+const table = require("console.table");
 // const dbFile = require("./db") for separation of concerns
 
 // Connect to database
@@ -42,18 +42,20 @@ function questionPrompts() {
       }
       // Needs to show the name of the dept that it belongs to
       else if (data.usersChoice === "View all roles") {
-        db.query(
-          "SELECT role.id, role.title, role.salary, department.name AS department_name FROM role LEFT JOIN department ON role.department_id = department.id",
-          function (err, results) {
-            console.table(results);
-            questionPrompts();
-          }
-        );
+        db.promise()
+          .query(
+            "SELECT role.id, role.title, role.salary, department.name AS department_name FROM role LEFT JOIN department ON role.department_id = department.id"
+          )
+          .then((err, results) => {
+             console.table(results);
+             questionPrompts();
+          });
+         
       }
       // NEEDS TO SHOW MANAGERS and dept names instead of the numbers
       else if (data.usersChoice === "View all employees") {
         db.query(
-          "SELECT employee.id, employee.first_name, employee.last_name, role.title, role.salary,role.department_id, department.name AS department_name FROM employee  LEFT JOIN role ON employee.role_id = role.id LEFT JOIN department ON role.department_id = department.id",
+          "SELECT employee.id, employee.first_name, employee.last_name, role.title, role.salary, department.name AS department_name FROM employee  LEFT JOIN role ON employee.role_id = role.id LEFT JOIN department ON role.department_id = department.id",
           function (err, results) {
             console.table(results);
             questionPrompts();
@@ -76,14 +78,14 @@ function questionPrompts() {
 
 // ADD AN EMPLOYEE FUNCTION
 function addEmployee() {
-  // const managers =[];
+  // const managers = [];
   // db.query(SELECT * )
   // select all employees innerjoin role id onto roles table
   // WHERE role.title = managers
   // add managers, ids, and department name from the role table into the managers array
   // use managers array as the choices for the inquirer prompt question
   db.query(
-    "SELECT role.title, role.id, department.name AS Department_name FROM role INNER JOIN department ON role.department_id = department.id",
+    "SELECT role.title, role.id, department.name AS Department_name FROM role JOIN department ON role.department_id = department.id",
     function (err, results) {
       console.log(results);
       const titles = results.map((element) => {
@@ -110,6 +112,12 @@ function addEmployee() {
             name: "lastName",
             message: "What is their last name?",
           },
+          // {
+          //   type: "list",
+          //   name: "manager",
+          //   message: "Who will be their manager?",
+          //   choices: managers,
+          // },
         ])
         .then((data) => {
           // needs to be able to add the employee to employee table when a new employee is created!!
