@@ -2,7 +2,7 @@ USE business_db;
 -- Insert multiple biographies --
 INSERT INTO department (name)
 VALUES
-    ("Accounting" ),
+    ("Accounting"),
     ("Sales" ),
     ("Quality Assurance" ),
     ("Human Resources" ),

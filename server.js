@@ -1,6 +1,7 @@
 const mysql = require("mysql2");
 const inquirer = require("inquirer");
 const Table = require("console.table");
+// const dbFile = require("./db") for separation of concerns
 
 // Connect to database
 const db = mysql.createConnection(
@@ -41,15 +42,18 @@ function questionPrompts() {
       }
       // Needs to show the name of the dept that it belongs to
       else if (data.usersChoice === "View all roles") {
-        db.query("SELECT * FROM role", function (err, results) {
-          console.table(results);
-          questionPrompts();
-        });
+        db.query(
+          "SELECT role.id, role.title, role.salary, department.name AS department_name FROM role LEFT JOIN department ON role.department_id = department.id",
+          function (err, results) {
+            console.table(results);
+            questionPrompts();
+          }
+        );
       }
       // NEEDS TO SHOW MANAGERS and dept names instead of the numbers
       else if (data.usersChoice === "View all employees") {
         db.query(
-          "SELECT employee.id, employee.first_name, employee.last_name, role.title, role.salary,role.department_id FROM employee JOIN role ON employee.role_id = role.id",
+          "SELECT employee.id, employee.first_name, employee.last_name, role.title, role.salary,role.department_id, department.name AS department_name FROM employee  LEFT JOIN role ON employee.role_id = role.id LEFT JOIN department ON role.department_id = department.id",
           function (err, results) {
             console.table(results);
             questionPrompts();
@@ -81,6 +85,7 @@ function addEmployee() {
   db.query(
     "SELECT role.title, role.id, department.name AS Department_name FROM role INNER JOIN department ON role.department_id = department.id",
     function (err, results) {
+      console.log(results);
       const titles = results.map((element) => {
         return {
           name: `${element.title} from ${element.Department_name}`,
@@ -107,17 +112,16 @@ function addEmployee() {
           },
         ])
         .then((data) => {
-          
           // needs to be able to add the employee to employee table when a new employee is created!!
           db.query(
-            `INSERT INTO employee (first_name, last_name, role_id) VALUES (${data.firstName}, ${data.lastName}, ${data.role})`,
+            `INSERT INTO employee (first_name, last_name, role_id) VALUES ("${data.firstName}", "${data.lastName}", ${data.role})`,
             function (err, results) {
-              if(err){
-                console.log(err)
+              if (err) {
+                console.log(err);
               }
-              console.log(`\n You just added a ${data.firstName} as a new employee`);
-              console.log()
-              
+              console.log(
+                `\n You just added a ${data.firstName} as a new employee`
+              );
             }
           );
           // console.log(data);
