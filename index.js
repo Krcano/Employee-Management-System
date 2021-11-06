@@ -4,9 +4,7 @@ const table = require("console.table");
 
 const db = mysql.createConnection({
   host: "localhost",
-  // MySQL username,
   user: "root",
-  // TODO: Add MySQL password here
   password: "KSQLserver2021#",
   database: "business_db",
 });
@@ -34,9 +32,7 @@ function questionPrompts() {
           console.table(results);
           questionPrompts();
         });
-      }
-      // Needs to show the name of the dept that it belongs to
-      else if (data.usersChoice === "View all roles") {
+      } else if (data.usersChoice === "View all roles") {
         db.query(
           "SELECT role.id, role.title, role.salary, department.name AS department_name FROM role LEFT JOIN department ON role.department_id = department.id",
           function (err, results) {
@@ -44,9 +40,7 @@ function questionPrompts() {
             questionPrompts();
           }
         );
-      }
-      // NEEDS TO SHOW MANAGERS and dept names instead of the numbers
-      else if (data.usersChoice === "View all employees") {
+      } else if (data.usersChoice === "View all employees") {
         db.query(
           `SELECT employee.id, employee.first_name, employee.last_name, role.title, role.salary, department.name AS department_name, CONCAT(manager.first_name, ' ', manager.last_name) AS manager
           FROM employee  LEFT JOIN role ON employee.role_id = role.id LEFT JOIN department ON role.department_id = department.id LEFT JOIN employee manager ON manager.id = employee.manager_id;`,
@@ -71,12 +65,13 @@ function questionPrompts() {
 }
 
 function addEmployee() {
-  const managers = [];
-  //   // db.query(SELECT * )
-  //   // select all employees innerjoin role id onto roles table
-  //   // WHERE role.title = manager
-  //   // add managers, ids, and department name from the role table into the managers array
-  //   // use managers array as the choices for the inquirer prompt question
+  // TO DO:
+  // db.query(SELECT * )
+  // select all employees innerjoin role id onto roles table
+  // WHERE role.title = manager
+  // add managers, ids, and department name from the role table into the managers array
+  // use managers array as the choices for the inquirer prompt question
+  // -----------------------------------------------------------
   db.query(
     "SELECT role.title, role.id, department.name AS department_name FROM role  JOIN department ON role.department_id = department.id ",
     function (err, results) {
@@ -194,6 +189,7 @@ function addRole() {
   });
 }
 
+// UPDATING EMPLOYEE
 // function updateEmployee() {
 //   db.query("SELECT role.title AS role FROM employee INNER JOIN role ON role.id = role_id", function (err, results) {
 //     console.log(results);
