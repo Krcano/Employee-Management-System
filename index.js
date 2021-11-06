@@ -49,8 +49,7 @@ function questionPrompts() {
       else if (data.usersChoice === "View all employees") {
         db.query(
           `SELECT employee.id, employee.first_name, employee.last_name, role.title, role.salary, department.name AS department_name, CONCAT(manager.first_name, ' ', manager.last_name) AS manager
-          FROM employee  LEFT JOIN role ON employee.role_id = role.id LEFT JOIN department ON role.department_id = department.id LEFT JOIN employee manager ON manager.manager_id = employee.id;
-          `,
+          FROM employee  LEFT JOIN role ON employee.role_id = role.id LEFT JOIN department ON role.department_id = department.id LEFT JOIN employee manager ON manager.id = employee.manager_id;`,
           function (err, results) {
             console.table(results);
             questionPrompts();
@@ -72,18 +71,19 @@ function questionPrompts() {
 }
 
 function addEmployee() {
+  const managers = [];
   //   // db.query(SELECT * )
   //   // select all employees innerjoin role id onto roles table
   //   // WHERE role.title = manager
   //   // add managers, ids, and department name from the role table into the managers array
   //   // use managers array as the choices for the inquirer prompt question
   db.query(
-    "SELECT role.title, role.id, department.name AS department_name FROM role JOIN department ON role.department_id = department.id ",
+    "SELECT role.title, role.id, department.name AS department_name FROM role  JOIN department ON role.department_id = department.id ",
     function (err, results) {
       console.log(results);
       const titles = results.map((element) => {
         return {
-          name: `${element.title}`,
+          name: element.title,
           value: element.id,
         };
       });
@@ -112,11 +112,10 @@ function addEmployee() {
           //   type: "list",
           //   name: "manager",
           //   message: "Who will be their manager?",
-          //   choices: ["Michael Scott"]
+          //   choices:[ managers, "none"]
           // },
         ])
         .then((data) => {
-          // needs to be able to add the employee to employee table when a new employee is created!!
           db.query(
             `INSERT INTO employee (first_name, last_name, role_id) VALUES ("${data.firstName}", "${data.lastName}", ${data.role})`,
             function (err, results) {
@@ -189,7 +188,6 @@ function addRole() {
               `\n You just added ${data.title} with a salary of ${data.salary} as a new role`
             );
           }
-          
         );
         questionPrompts();
       });
