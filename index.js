@@ -9,6 +9,7 @@ const db = mysql.createConnection({
   database: "business_db",
 });
 
+// Initial Prompt
 function questionPrompts() {
   inquirer
     .prompt({
