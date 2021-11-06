@@ -2,11 +2,12 @@ USE business_db;
 -- Insert multiple biographies --
 INSERT INTO department (name)
 VALUES
-    ("Accounting"),
+    ("Accounting" ),
     ("Sales" ),
     ("Quality Assurance" ),
     ("Human Resources" ),
     ("Customer Service" );
+    
 
 INSERT INTO role (title, salary, department_id )
 VALUES
@@ -20,8 +21,9 @@ VALUES
 INSERT INTO employee (first_name, last_name, role_id, manager_id )
 VALUES
     ("Angela","Martin", 3, NULL),
-    ("Jim","Halpert", 5, NULL),
-    ("Creed","Bratton", 1, NULL ),
-    ("Toby","Flenderson", 2, NULL),
-    ("Kelly","Kapoor", 4, NULL );
+    ("Jim","Halpert", 5, 1 ),
+    ("Creed","Bratton", 1, NULL),
+    ("Toby","Flenderson", 2, 3),
+    ("Kelly","Kapoor", 4, NULL),
+    ("Michael","Scott", 5, 5);
 

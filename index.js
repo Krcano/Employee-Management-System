@@ -1,20 +1,15 @@
 const mysql = require("mysql2");
 const inquirer = require("inquirer");
 const table = require("console.table");
-// const dbFile = require("./db") for separation of concerns
 
-// Connect to database
-const db = mysql.createConnection(
-  {
-    host: "localhost",
-    // MySQL username,
-    user: "root",
-    // TODO: Add MySQL password here
-    password: "KSQLserver2021#",
-    database: "business_db",
-  },
-  console.log(`Connected to the business_db database.`)
-);
+const db = mysql.createConnection({
+  host: "localhost",
+  // MySQL username,
+  user: "root",
+  // TODO: Add MySQL password here
+  password: "KSQLserver2021#",
+  database: "business_db",
+});
 
 function questionPrompts() {
   inquirer
@@ -42,20 +37,20 @@ function questionPrompts() {
       }
       // Needs to show the name of the dept that it belongs to
       else if (data.usersChoice === "View all roles") {
-        db.promise()
-          .query(
-            "SELECT role.id, role.title, role.salary, department.name AS department_name FROM role LEFT JOIN department ON role.department_id = department.id"
-          )
-          .then((err, results) => {
-             console.table(results);
-             questionPrompts();
-          });
-         
+        db.query(
+          "SELECT role.id, role.title, role.salary, department.name AS department_name FROM role LEFT JOIN department ON role.department_id = department.id",
+          function (err, results) {
+            console.table(results);
+            questionPrompts();
+          }
+        );
       }
       // NEEDS TO SHOW MANAGERS and dept names instead of the numbers
       else if (data.usersChoice === "View all employees") {
         db.query(
-          "SELECT employee.id, employee.first_name, employee.last_name, role.title, role.salary, department.name AS department_name FROM employee  LEFT JOIN role ON employee.role_id = role.id LEFT JOIN department ON role.department_id = department.id",
+          `SELECT employee.id, employee.first_name, employee.last_name, role.title, role.salary, department.name AS department_name, CONCAT(manager.first_name, ' ', manager.last_name) AS manager
+          FROM employee  LEFT JOIN role ON employee.role_id = role.id LEFT JOIN department ON role.department_id = department.id LEFT JOIN employee manager ON manager.manager_id = employee.id;
+          `,
           function (err, results) {
             console.table(results);
             questionPrompts();
@@ -76,24 +71,25 @@ function questionPrompts() {
     });
 }
 
-// ADD AN EMPLOYEE FUNCTION
 function addEmployee() {
-  // const managers = [];
-  // db.query(SELECT * )
-  // select all employees innerjoin role id onto roles table
-  // WHERE role.title = managers
-  // add managers, ids, and department name from the role table into the managers array
-  // use managers array as the choices for the inquirer prompt question
+  //   // db.query(SELECT * )
+  //   // select all employees innerjoin role id onto roles table
+  //   // WHERE role.title = manager
+  //   // add managers, ids, and department name from the role table into the managers array
+  //   // use managers array as the choices for the inquirer prompt question
   db.query(
-    "SELECT role.title, role.id, department.name AS Department_name FROM role JOIN department ON role.department_id = department.id",
+    "SELECT role.title, role.id, department.name AS department_name FROM role JOIN department ON role.department_id = department.id ",
     function (err, results) {
       console.log(results);
       const titles = results.map((element) => {
         return {
-          name: `${element.title} from ${element.Department_name}`,
+          name: `${element.title}`,
           value: element.id,
         };
       });
+      // const managers = results.map((element) => {
+      //   return { name: element.manager, value: element.manager_id };
+      // });
       inquirer
         .prompt([
           {
@@ -116,7 +112,7 @@ function addEmployee() {
           //   type: "list",
           //   name: "manager",
           //   message: "Who will be their manager?",
-          //   choices: managers,
+          //   choices: ["Michael Scott"]
           // },
         ])
         .then((data) => {
@@ -132,13 +128,11 @@ function addEmployee() {
               );
             }
           );
-          // console.log(data);
           questionPrompts();
         });
     }
   );
 }
-
 // ADDs A DEPARTMENT FUNCTION
 function addDepartment() {
   inquirer
@@ -167,7 +161,6 @@ function addRole() {
         value: dept.id,
       };
     });
-    // console.log(departmentNames)
     inquirer
       .prompt([
         {
@@ -195,12 +188,61 @@ function addRole() {
             console.log(
               `\n You just added ${data.title} with a salary of ${data.salary} as a new role`
             );
-            return results;
           }
+          
         );
         questionPrompts();
       });
   });
 }
+
+// function updateEmployee() {
+//   db.query("SELECT role.title AS role FROM employee INNER JOIN role ON role.id = role_id", function (err, results) {
+//     console.log(results);
+//     const titles = results.map((element) => {
+//       return { name: element.first_name, value: element.id }
+//       // {name:element.role, value:element.role_id}
+
+//     });
+//     // console.log(departmentNames)
+//     inquirer.prompt([
+//       {
+//         type: "list",
+//         name: "role",
+//         message: "Which employee would you like to change",
+//         choices: titles,
+//       },
+//       {
+//         type: "input",
+//         name: "firstName",
+//         message: "Enter the new or current first name of the employee",
+//       },
+//       {
+//         type: "input",
+//         name: "lastName",
+//         message: "Enter the new or current last name of the employee",
+//       },
+//       {
+//         type: "list",
+//         name: "role",
+//         message: "What is their new role?",
+//         choices: titles,
+//       },
+//     ]);
+//     // .then((data) => {
+//     //   db.query(
+//     //     `UPDATE employee SET first_name = ${data.firstName}, last_name = ${data.lastName}, role_id = ${data.role} `,
+//     //     function (err, results) {
+//     //       console.log(departmentNames);
+//     //       console.log(
+//     //         `\n You just updated your employee`
+//     //       );
+//     //       // return results;
+//     //     }
+//     //   );
+//     //   questionPrompts();
+//     // });
+//   });
+// }
 
 questionPrompts();

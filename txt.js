@@ -90,3 +90,97 @@ function questionPrompts() {
       //     questionPrompts();
       //   });
       // }
+
+
+// connection
+// Connect to database
+// const db = mysql.createConnection(
+//   {
+//     host: "localhost",
+//     // MySQL username,
+//     user: "root",
+//     // TODO: Add MySQL password here
+//     password: "KSQLserver2021#",
+//     database: "business_db",
+//   },
+//   console.log(`Connected to the business_db database.`)
+// );
+
+
+
+
+
+
+      // -----------------------------------------------------------------
+      // INNER JOIN role ON role_id WHERE role.title = manager
+
+
+// ---------------------------------------------------------
+      // ADD AN EMPLOYEE FUNCTION
+// function addEmployee() {
+// 
+//   db.query(
+//     "SELECT role.title, role.id, department.name AS Department_name FROM role JOIN department ON role.department_id = department.id",
+//     function (err, results) {
+//       console.log(results);
+//       const titles = results.map((element) => {
+//         return {
+//           name: `${element.title} from ${element.Department_name}`,
+//           value: element.id,
+//         };
+//       });
+//       inquirer
+//         .prompt([
+//           {
+//             type: "list",
+//             name: "role",
+//             message: "What role do they have?",
+//             choices: titles,
+//           },
+//           {
+//             type: "input",
+//             name: "firstName",
+//             message: "Whatis their first name?",
+//           },
+//           {
+//             type: "input",
+//             name: "lastName",
+//             message: "What is their last name?",
+//           },
+//           // {
+//           //   type: "list",
+//           //   name: "manager",
+//           //   message: "Who will be their manager?",
+//           //   choices: managers,
+//           // },
+//         ])
+//         .then((data) => {
+//           // needs to be able to add the employee to employee table when a new employee is created!!
+//           db.query(
+//             `INSERT INTO employee (first_name, last_name, role_id) VALUES ("${data.firstName}", "${data.lastName}", ${data.role})`,
+//             function (err, results) {
+//               if (err) {
+//                 console.log(err);
+//               }
+//               console.log(
+//                 `\n You just added a ${data.firstName} as a new employee`
+//               );
+//             }
+//           );
+//           // console.log(data);
+//           questionPrompts();
+//         });
+//     }
+//   );
+// }
+
+
+
+
+
+
+
+
+
+
+
