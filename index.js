@@ -8,7 +8,7 @@ const db = mysql.createConnection({
   password: "KSQLserver2021#",
   database: "business_db",
 });
-
+const managerArray = [];
 // Initial Prompt
 function questionPrompts() {
   inquirer
@@ -60,7 +60,7 @@ function questionPrompts() {
       } else if (data.usersChoice === "Add an employee") {
         addEmployee();
       } else if (data.usersChoice === "Update an employee") {
-        updateEmployee();
+        updateEmployeeRole();
       }
     });
 }
@@ -83,9 +83,7 @@ function addEmployee() {
           value: element.id,
         };
       });
-      // const managers = results.map((element) => {
-      //   return { name: element.manager, value: element.manager_id };
-      // });
+
       inquirer
         .prompt([
           {
@@ -108,8 +106,8 @@ function addEmployee() {
           //   type: "list",
           //   name: "manager",
           //   message: "Who will be their manager?",
-          //   choices:[ managers, "none"]
-          // },
+          //   choices: managerArray
+          // }
         ])
         .then((data) => {
           db.query(
@@ -128,6 +126,21 @@ function addEmployee() {
     }
   );
 }
+
+// function grabManager(managerArray){
+
+//   db.query(
+//     `SELECT first_name, last_name,manager_id, id FROM employee`),
+//   function (err, results){
+//      results.forEach((element)=>{
+//       managerArray.push(element.first_name, element.last_name,element.manager_id)
+
+//       return managerArray
+//     })
+
+//   }
+// }
+
 // ADDs A DEPARTMENT FUNCTION
 function addDepartment() {
   inquirer
@@ -191,53 +204,46 @@ function addRole() {
 }
 
 // UPDATING EMPLOYEE
-// function updateEmployee() {
-//   db.query("SELECT role.title AS role FROM employee INNER JOIN role ON role.id = role_id", function (err, results) {
-//     console.log(results);
-//     const titles = results.map((element) => {
-//       return { name: element.first_name, value: element.id }
-//       // {name:element.role, value:element.role_id}
+function updateEmployeeRole() {
+  db.query(
+    "SELECT role.title, employee.* FROM employee LEFT JOIN role ON role.id = employee.role_id",
+    function (err, results) {
+      console.log(results);
+      const names = results.map((element) => {
+        return {
+          name: `${element.first_name} ${element.last_name}`,
+          value: element.id,
+        };
+      });
+      const roles = results.map((element) => {
+        return { name: element.title, value: element.role_id };
+      });
+      // console.log(departmentNames)
+      inquirer
+        .prompt([
+          {
+            type: "list",
+            name: "name",
+            message: "Which employee would you like to change",
+            choices: names,
+          },
+          {
+            type: "list",
+            name: "role",
+            message: "What is their new role?",
+            choices: roles,
+          },
+        ])
+        .then((data) => {
+          db.query(
+            `UPDATE employee SET role_id = "${data.role}" WHERE employee.id = ${data.name}`,
 
-//     });
-//     // console.log(departmentNames)
-//     inquirer.prompt([
-//       {
-//         type: "list",
-//         name: "role",
-//         message: "Which employee would you like to change",
-//         choices: titles,
-//       },
-//       {
-//         type: "input",
-//         name: "firstName",
-//         message: "Enter the new or current first name of the employee",
-//       },
-//       {
-//         type: "input",
-//         name: "lastName",
-//         message: "Enter the new or current last name of the employee",
-//       },
-//       {
-//         type: "list",
-//         name: "role",
-//         message: "What is their new role?",
-//         choices: titles,
-//       },
-//     ]);
-//     // .then((data) => {
-//     //   db.query(
-//     //     `UPDATE employee SET first_name = ${data.firstName}, last_name = ${data.lastName}, role_id = ${data.role} `,
-//     //     function (err, results) {
-//     //       console.log(departmentNames);
-//     //       console.log(
-//     //         `\n You just updated your employee`
-//     //       );
-//     //       // return results;
-//     //     }
-//     //   );
-//     //   questionPrompts();
-//     // });
-//   });
-// }
+            console.log(data)
+          );
+          questionPrompts();
+        });
+    }
+  );
+}
 
 questionPrompts();
