@@ -1,29 +1,33 @@
 # Employee-Management-System
 
-  ![License: MIT](https://img.shields.io/badge/License-MIT-success.svg)
-  
-  ## Description
-  My Project uses Node.js and MySQL to create an employee managemant system. It allows you to view all the employees, departments, and roles in your company and add one of each to your database.
+![License: MIT](https://img.shields.io/badge/License-MIT-success.svg)
 
-  [Link to Video Description](https://drive.google.com/file/d/1cXVIeTVfyDtZCPkPL709vVb5kP92y4kK/view)
+## Description
+
+My Project uses Node.js and MySQL to create an employee managemant system. It allows you to view all the employees, departments, and roles in your company and adda new one of each to your database.
+
+[Link to Video Description](https://drive.google.com/file/d/1cXVIeTVfyDtZCPkPL709vVb5kP92y4kK/view)
 
 ## Table of Contents
-  [Usage](#usage)
 
+[Usage](#usage)
 
-  [Installation](#installation)
+[Installation](#installation)
 
-  [License](#License)
+[License](#License)
 
 ## Installation
-  To install the project the user must have Node.js and MySQL installed as well as inquirer. Once they get those installed they can open theri terminal and start answering the question prompts.
+
+To install the project the user must have Node.js and MySQL installed as well as inquirer. Once they get those installed they can open their terminal and start answering the question prompts.
 
 ## Usage
-To get started is the user will type node index.js into their terminal. Then the user will be prompted with several questions depending on what they want to do first. For example if they want to create a new role the user will have to input  the name of the new role, the salary and the department the role will be in.
+
+To get started is the user will type node index.js into their terminal. Then the user will be prompted with several questions depending on what they want to do first. For example if they want to create a new role the user will have to input the name of the new role, the salary and the department the role will be in.
 
 ## License
-  [License: MIT](https://opensource.org/licenses/MIT)
- MIT License
+
+[License: MIT](https://opensource.org/licenses/MIT)
+MIT License
 
 Copyright (c) [2021] [Kelly R. Cano]
 
