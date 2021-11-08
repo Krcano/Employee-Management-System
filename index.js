@@ -8,7 +8,7 @@ const db = mysql.createConnection({
   password: "KSQLserver2021#",
   database: "business_db",
 });
-const managerArray = [];
+
 // Initial Prompt
 function questionPrompts() {
   inquirer
@@ -66,13 +66,6 @@ function questionPrompts() {
 }
 
 function addEmployee() {
-  // TO DO:
-  // db.query(SELECT * )
-  // select all employees innerjoin role id onto roles table
-  // WHERE role.title = manager
-  // add managers, ids, and department name from the role table into the managers array
-  // use managers array as the choices for the inquirer prompt question
-  // -----------------------------------------------------------
   db.query(
     "SELECT role.title, role.id, department.name AS department_name FROM role  JOIN department ON role.department_id = department.id ",
     function (err, results) {
@@ -102,12 +95,6 @@ function addEmployee() {
             name: "lastName",
             message: "What is their last name?",
           },
-          // {
-          //   type: "list",
-          //   name: "manager",
-          //   message: "Who will be their manager?",
-          //   choices: managerArray
-          // }
         ])
         .then((data) => {
           db.query(
@@ -126,20 +113,6 @@ function addEmployee() {
     }
   );
 }
-
-// function grabManager(managerArray){
-
-//   db.query(
-//     `SELECT first_name, last_name,manager_id, id FROM employee`),
-//   function (err, results){
-//      results.forEach((element)=>{
-//       managerArray.push(element.first_name, element.last_name,element.manager_id)
-
-//       return managerArray
-//     })
-
-//   }
-// }
 
 // ADDs A DEPARTMENT FUNCTION
 function addDepartment() {
@@ -218,7 +191,7 @@ function updateEmployeeRole() {
       const roles = results.map((element) => {
         return { name: element.title, value: element.role_id };
       });
-      // console.log(departmentNames)
+
       inquirer
         .prompt([
           {
