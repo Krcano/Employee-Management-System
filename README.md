@@ -6,7 +6,7 @@
 
 My Project uses Node.js and MySQL to create an employee managemant system. It allows you to view all the employees, departments, and roles in your company and adda new one of each to your database.
 
-[Link to Video Description](https://drive.google.com/file/d/1cXVIeTVfyDtZCPkPL709vVb5kP92y4kK/view)
+[Link to Video Description](https://drive.google.com/file/d/1FxH6ve_26Yp2fvwaQrMf1c8dh26O78Q4/view)
 
 ## Table of Contents
 
