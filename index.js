@@ -67,7 +67,7 @@ function questionPrompts() {
 
 function addEmployee() {
   db.query(
-    "SELECT role.title, role.id, department.name AS department_name FROM role  JOIN department ON role.department_id = department.id ",
+    "SELECT employee.first_name, employee.last_name, employee.id AS employee_id, role.title, role.id FROM role LEFT JOIN employee On employee.role_id = role.id  ",
     function (err, results) {
       console.log(results);
       const titles = results.map((element) => {
@@ -76,7 +76,15 @@ function addEmployee() {
           value: element.id,
         };
       });
-
+      const managers = results.map((names)=>{
+        
+        return {
+          name: `${names.first_name} ${names.last_name}`,
+          value: names.employee_id,
+        }
+        
+      })
+      console.log(managers)
       inquirer
         .prompt([
           {
@@ -95,10 +103,16 @@ function addEmployee() {
             name: "lastName",
             message: "What is their last name?",
           },
+          {
+            type:"list",
+            name: "manager",
+            message: "Who is their manager?",
+            choices: managers,
+          }
         ])
         .then((data) => {
           db.query(
-            `INSERT INTO employee (first_name, last_name, role_id) VALUES ("${data.firstName}", "${data.lastName}", ${data.role})`,
+            `INSERT INTO employee (first_name, last_name, role_id, manager_id) VALUES ("${data.firstName}", "${data.lastName}", ${data.role}, ${data.manager})`,
             function (err, results) {
               if (err) {
                 console.log(err);
